@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace AnimeSea.Controllers
+namespace AnimeSea.Controllers.Web
 {
     public class HomeController : Controller
     {
