@@ -40,12 +40,13 @@ namespace AnimeSea.Metadata.Providers.Kitsu
                 if (animeData.Relationships.ContainsKey("genres"))
                 {
                     // Gotta do an extra request to get genres for an anime.
-                    // Pretty annoying but ok.
-                    genres = (await animeData.Relationships["genres"].Links.Related
-                            .WithClient(_client)
-                            .GetJsonAsync<KitsuResponse<KitsuAnimeGenresAttributes>>()).Data
-                        .Select(x => x.Attributes.Name)
-                        .ToArray();
+                    // It's pretty slow as well so we might as well disable it.
+
+                    // genres = (await animeData.Relationships["genres"].Links.Related
+                    //         .WithClient(_client)
+                    //         .GetJsonAsync<KitsuResponse<KitsuAnimeGenresAttributes>>()).Data
+                    //     .Select(x => x.Attributes.Name)
+                    //     .ToArray();
                 }
 
                 result.Add(new MetadataSearchEntry
