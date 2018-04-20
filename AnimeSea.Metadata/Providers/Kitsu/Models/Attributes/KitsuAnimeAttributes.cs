@@ -14,6 +14,8 @@ namespace AnimeSea.Metadata.Providers.Kitsu.Models.Attributes
 
         public KitsuAnimePosterImage PosterImage { get; set; }
 
+        public KitsuAnimePosterImage CoverImage { get; set; }
+
         public int? EpisodeCount { get; set; }
 
         public int? EpisodeLength { get; set; }

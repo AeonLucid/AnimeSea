@@ -54,7 +54,20 @@ namespace AnimeSea.Metadata.Providers.Kitsu
                     Title = attr.CanonicalTitle,
                     Titles = attr.Titles,
                     Genres = genres,
-                    Image = attr.PosterImage.Original ?? attr.PosterImage.Large ?? attr.PosterImage.Medium ?? attr.PosterImage.Small ?? attr.PosterImage.Tiny,
+                    PosterImage = attr.PosterImage != null
+                        ? attr.PosterImage.Original
+                          ?? attr.PosterImage.Large
+                          ?? attr.PosterImage.Medium
+                          ?? attr.PosterImage.Small
+                          ?? attr.PosterImage.Tiny
+                        : null,
+                    CoverImage = attr.CoverImage != null
+                        ? attr.CoverImage.Medium
+                          ?? attr.CoverImage.Large
+                          ?? attr.CoverImage.Original
+                          ?? attr.CoverImage.Small
+                          ?? attr.CoverImage.Tiny
+                        : null,
                     Synopsis = attr.Synopsis,
                     EpisodeCount = attr.EpisodeCount,
                     EpisodeLength = attr.EpisodeLength

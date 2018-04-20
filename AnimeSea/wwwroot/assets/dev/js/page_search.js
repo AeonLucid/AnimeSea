@@ -17,10 +17,11 @@ const app = new Vue({
             }
 
             this.results = [];
+            this.resultsEmpty = false;
 
             searchTimerId = setTimeout(() => {
                 this.search();
-            }, 400);
+            }, 800);
         }
     },
     methods: {

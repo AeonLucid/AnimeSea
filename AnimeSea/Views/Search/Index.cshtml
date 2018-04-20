@@ -38,10 +38,11 @@
     <div class="row mb-3" v-for="result in results">
         <div class="col-md-12">
             <div class="card">
+                <img class="card-img-top" :src="result.coverImage" alt="Cover image" v-if="result.coverImage != null">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <img class="img-fluid img-thumbnail" :src="result.image" alt="Cover image"/>
+                            <img class="img-fluid img-thumbnail" :src="result.posterImage" alt="Poster image" />
                         </div>
                         <div class="col-md-10">
                             <h5 class="card-title">{{ result.title }}</h5>

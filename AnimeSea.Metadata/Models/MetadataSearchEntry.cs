@@ -27,8 +27,13 @@ namespace AnimeSea.Metadata.Models
         /// <summary>
         ///     Optional, but recommended!
         /// </summary>
-        public string Image { get; set; }
-        
+        public string PosterImage { get; set; }
+
+        /// <summary>
+        ///     Optional, can be disabled by the user.
+        /// </summary>
+        public string CoverImage { get; set; }
+
         /// <summary>
         ///     Required.
         /// </summary>
