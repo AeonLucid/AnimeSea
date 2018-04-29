@@ -1,6 +1,27 @@
 ﻿var searchUrl = searchUrl || "/Search/Submit";
 let searchTimerId = null;
 
+function getParams(query) {
+    if (!query) {
+        return {};
+    }
+
+    return (/^[?#]/.test(query) ? query.slice(1) : query)
+        .split('&')
+        .reduce((params, param) => {
+            let [key, value] = param.split('=');
+            params[key] = value ? decodeURIComponent(value.replace(/\+/g, ' ')) : '';
+            return params;
+        }, {});
+}
+
+function getQuery(params) {
+    return Object.keys(params)
+        .filter(key => params[key] !== null)
+        .map(key => key + '=' + encodeURIComponent(params[key]))
+        .join('&');
+}
+
 const app = new Vue({
     el: "#v_app",
     data: {
@@ -9,7 +30,8 @@ const app = new Vue({
         resultsEmpty: false,
         next: null,
         searching: false,
-        autoSearch: true
+        autoSearch: true,
+        providerId: 0
     },
     created: function () {
         this.onHashChange();
@@ -24,7 +46,9 @@ const app = new Vue({
         query: function() {
             // Update hash
             if (this.query) {
-                const hash = '#q=' + this.query;
+                const params = {pid: this.providerId !== 0 ? this.providerId: null, q: this.query}
+                const hash = '#' + getQuery(params);
+
                 if (history.pushState) {
                     history.replaceState(null, null, hash);
                 } else {
@@ -54,11 +78,27 @@ const app = new Vue({
         }
     },
     methods: {
+        /**
+         * See 'page_search.popout.js' for the implementation of this function.
+         */
+        popOut: popOut,
+
+        /**
+         * Called when the hash in the URL was changed.
+         */
         onHashChange: function() {
-            if (location.hash.substr(0, 3) === '#q=') {
-                this.search(location.hash.substr(3));
+            if (location.hash) {
+                const params = getParams(location.hash);
+                this.search(params.q, params.pid);
             }
         },
+        
+        /**
+         * Joins all elements of an array or object into a string.
+         * 
+         * @argument {Array|Object} listItems The array
+         * @returns {String} A string with all array elements joined.
+         */
         getCommaSeperated: function (listItems) {
             if (typeof listItems === "object") {
                 listItems = Object.values(listItems);
@@ -82,8 +122,16 @@ const app = new Vue({
 
             return response;
         },
-        search: function (query) {
-            if (query) {
+
+        /**
+         * Searches the given query.
+         * 
+         * @argument {String} [query] The query. If no argument is given the "this.query" will be used instead.
+         */
+        search: function (query, providerId) {
+            if (query === undefined) {
+                query = this.query;
+            } else {
                 this.query = query;
 
                 // We disable auto-search because the 'query' is being watched.
@@ -94,8 +142,12 @@ const app = new Vue({
                         this.autoSearch = true;
                     })
                 }
+            }
+
+            if (providerId === undefined) {
+                providerId = this.providerId;
             } else {
-                query = this.query;
+                this.providerId = providerId;
             }
 
             if (query.length === 0 || this.searching) {
@@ -113,7 +165,7 @@ const app = new Vue({
             this.resultsEmpty = false;
             this.next = null;
 
-            fetch(searchUrl + "?q=" + encodeURIComponent(query))
+            fetch(searchUrl + "?" + getQuery({q: this.query, pid: this.providerId}))
                 .then(res => res.json())
                 .then(res => {
                     this.searching = false;

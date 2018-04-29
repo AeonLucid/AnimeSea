@@ -1,18 +1,26 @@
-﻿@{
+﻿@model SearchViewModel
+@{
     ViewBag.Title = "Search";
+}
+
+@section head {
+    <link href="~/assets/dev/css/page_search.css" rel="stylesheet"/>
 }
 
 <div id="v_app" v-cloak>
     <div class="form-row mb-3">
-        <div class="col">
-            <input type="text" class="form-control" id="queryId" placeholder="Query" v-model="query" :disabled="searching">
-        </div>
-
-        <div class="col-sm-2">
-            <button type="submit" class="btn btn-primary btn-block mb-2" @@click="search" :disabled="searching">Search</button>
-        </div>
+        <div class="input-group">
+            <input type="text" class="form-control" id="queryId" placeholder="Query" v-model="query">
+            
+            <div class="input-group-append">
+                    @if(Model.SearchProviders.Count() > 1) {
+                        @Html.DropDownListFor(m => m.SelectedSearchProviderId, Model.SearchProviders, new { @class = "form-control no-radius", @v_model = "providerId" })
+                    }
+                    <button type="submit" class="btn btn-primary" @@click="search">Search</button>
+                </div>
+            </div>
     </div>
-    
+
     <div class="row mb-3" v-if="searching">
         <div class="col-md-12">
             <div class="spinner_sk_wrapper">
@@ -38,17 +46,17 @@
     <div class="row mb-3" v-for="result in results">
         <div class="col-md-12">
             <div class="card">
-                <img class="card-img-top" :src="result.coverImage" alt="Cover image" v-if="result.coverImage != null">
+                <div class="card-bg" :style="{backgroundImage: 'url(' + (result.coverImage || result.posterImage) + ')'}"></div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-2">
-                            <img class="img-fluid img-thumbnail" :src="result.posterImage" alt="Poster image" />
+                            <img class="img-fluid img-thumbnail" :src="result.posterImage" @@click.prevent="popOut" alt="Poster image" />
                         </div>
-                        <div class="col-md-10">
-                            <h5 class="card-title">{{ result.title }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted" v-if="result.titles">Alternative titles: {{ getCommaSeperated(result.titles) }}</h6>
-                            <p class="card-text">{{ result.synopsis }}.</p>
-                            <div class="text-right">
+                        <div class="col-md-10 d-flex flex-column">
+                                <h5 class="card-title">{{ result.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted" v-if="result.titles">Alternative titles: {{ getCommaSeperated(result.titles) }}</h6>
+                                <p class="card-text">{{ result.synopsis }}.</p>
+                            <div class="text-right mt-auto">
                                 <a href="#" class="btn btn-primary">Add to library</a>
                             </div>
                         </div>
@@ -60,10 +68,11 @@
 </div>
 
 @section scripts
-{
+    {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js" integrity="sha256-TaLceMwjWRqe4yhbqPOJH6V7UGt5AvvdNfpaIXJWbFU=" crossorigin="anonymous"></script>
     <script type="text/javascript">
         var searchUrl = "@Url.Action("Submit", "Search")";
     </script>
+    <script src="~/assets/dev/js/page_search.popout.js"></script>
     <script src="~/assets/dev/js/page_search.js"></script>
 }
