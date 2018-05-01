@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AnimeSea.Metadata.Models;
 using AnimeSea.Metadata.Providers.Kitsu.Models;
@@ -51,6 +50,7 @@ namespace AnimeSea.Metadata.Providers.Kitsu
 
                 result.Add(new MetadataSearchEntry
                 {
+                    Id = animeData.Id,
                     Title = attr.CanonicalTitle,
                     Titles = attr.Titles,
                     Genres = genres,

@@ -3,7 +3,8 @@
     ViewBag.Title = "Search";
 }
 
-@section head {
+@section head 
+{
     <link href="~/assets/dev/css/page_search.css" rel="stylesheet"/>
 }
 
@@ -13,7 +14,8 @@
             <input type="text" class="form-control" id="queryId" placeholder="Query" v-model="query">
             
             <div class="input-group-append">
-                    @if(Model.SearchProviders.Count() > 1) {
+                    @if(Model.SearchProviders.Count() > 1)
+                    {
                         @Html.DropDownListFor(m => m.SelectedSearchProviderId, Model.SearchProviders, new { @class = "form-control no-radius", @v_model = "providerId" })
                     }
                     <button type="submit" class="btn btn-primary" @@click="search">Search</button>
@@ -57,7 +59,7 @@
                                 <h6 class="card-subtitle mb-2 text-muted" v-if="result.titles">Alternative titles: {{ getCommaSeperated(result.titles) }}</h6>
                                 <p class="card-text">{{ result.synopsis }}.</p>
                             <div class="text-right mt-auto">
-                                <a href="#" class="btn btn-primary">Add to library</a>
+                                <button @@click.prevent="add(result.id)" class="btn btn-primary" :disabled="result.alreadyAdded">Add to library</button>
                             </div>
                         </div>
                     </div>
@@ -68,7 +70,7 @@
 </div>
 
 @section scripts
-    {
+{
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.min.js" integrity="sha256-TaLceMwjWRqe4yhbqPOJH6V7UGt5AvvdNfpaIXJWbFU=" crossorigin="anonymous"></script>
     <script type="text/javascript">
         var searchUrl = "@Url.Action("Submit", "Search")";

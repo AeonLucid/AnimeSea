@@ -84,6 +84,15 @@ const app = new Vue({
         popOut: popOut,
 
         /**
+         * Add the serie to the library.
+         *
+         * @param {String} id The ID of the serie.
+         */
+        add: function(id) {
+            // TODO: Implement this.
+        },
+
+        /**
          * Called when the hash in the URL was changed.
          */
         onHashChange: function() {
@@ -138,9 +147,9 @@ const app = new Vue({
                 // When the view was rendered, we re-enable auto-search.
                 if (this.autoSearch) {
                     this.autoSearch = false;
-                    this.$nextTick(function () {
+                    this.$nextTick(function() {
                         this.autoSearch = true;
-                    })
+                    });
                 }
             }
 
@@ -165,11 +174,18 @@ const app = new Vue({
             this.resultsEmpty = false;
             this.next = null;
 
-            fetch(searchUrl + "?" + getQuery({q: this.query, pid: this.providerId}))
+            fetch(searchUrl + "?" + getQuery({q: query, pid: providerId}))
                 .then(res => res.json())
                 .then(res => {
+                    const libaryIds = res.libraryResults.map(e => e.providerSerieId);
+
                     this.searching = false;
-                    this.results = res.results;
+                    this.results = res.results.map(function (result) {
+                        // TODO: Add redirect link.
+                        result.alreadyAdded = libaryIds.indexOf(result.id) !== -1;
+
+                        return result;
+                    });
                     this.resultsEmpty = this.results.length === 0;
                     this.next = res.next;
                 });

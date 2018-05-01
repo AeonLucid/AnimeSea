@@ -2,6 +2,8 @@
 {
     public class KitsuResponse<T>
     {
+        public string Id { get; set; }
+
         public KitsuData<T>[] Data { get; set; }
 
         public KitsuMeta Meta { get; set; }

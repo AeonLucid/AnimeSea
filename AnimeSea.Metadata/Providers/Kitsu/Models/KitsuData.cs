@@ -4,7 +4,7 @@ namespace AnimeSea.Metadata.Providers.Kitsu.Models
 {
     public class KitsuData<T>
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         public string Type { get; set; }
 

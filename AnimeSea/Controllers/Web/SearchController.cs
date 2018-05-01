@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using AnimeSea.Data.Entities;
 using AnimeSea.Metadata;
-using AnimeSea.Metadata.Providers;
 using AnimeSea.Models;
+using LiteDB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,10 +13,12 @@ namespace AnimeSea.Controllers.Web
     public class SearchController : Controller
     {
         private readonly MetadataManager _metadataManager;
+        private readonly LiteDatabase _database;
 
-        public SearchController(MetadataManager metadataManager)
+        public SearchController(MetadataManager metadataManager, LiteDatabase database)
         {
-            _metadataManager = metadataManager; // Temporarily.
+            _metadataManager = metadataManager;
+            _database = database;
         }
 
         protected SelectList GetProviders()
@@ -44,10 +46,22 @@ namespace AnimeSea.Controllers.Web
                 return BadRequest(new ErrorModel("Invalid provider ID"));
             }
 
+            // Search the provider
             var metadataProvider = _metadataManager.MetadataProviders[providerId].Instance;
             var searchResults = await metadataProvider.SearchAsync(query);
 
-            return Ok(searchResults);
+            // Search internally
+            var searchResultIds = searchResults.Results.Select(x => x.Id);
+            var libraryResults = _database.GetCollection<Serie>()
+                .Find(x => x.ProviderId == providerId && searchResultIds.Contains(x.ProviderSerieId));
+
+
+            return Ok(new
+            {
+                searchResults.Next,
+                LibraryResults = libraryResults,
+                searchResults.Results
+            });
         }
     }
 }

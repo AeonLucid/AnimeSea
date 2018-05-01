@@ -5,6 +5,11 @@ namespace AnimeSea.Metadata.Models
     public class MetadataSearchEntry
     {
         /// <summary>
+        ///     Required: The ID of the serie.
+        /// </summary>
+        public string Id { get; set; }
+
+        /// <summary>
         ///     Required: Title of the show or movie.
         /// </summary>
         public string Title { get; set; }
