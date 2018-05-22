@@ -1,5 +1,6 @@
-﻿using System.IO;
-using AnimeSea.Data;
+﻿using AnimeSea.Data;
+using AnimeSea.Data.Extensions;
+using AnimeSea.Extensions;
 using AnimeSea.Metadata;
 using Autofac;
 using LiteDB;
@@ -19,25 +20,22 @@ namespace AnimeSea
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            // Metadata
             builder.RegisterType<MetadataManager>()
                 .SingleInstance();
 
+            // Database
             builder.RegisterType<BsonMapper>()
-                .OnActivating(e => SeaDatabase.Prepare(e.Instance))
+                .OnActivating(e => e.Instance.WithAnimeSeaMappings())
                 .SingleInstance();
 
             builder.Register(c =>
                 {
-                    var conf = c.Resolve<IConfiguration>();
+                    var configuration = c.Resolve<IConfiguration>();
+                    var env = c.Resolve<IHostingEnvironment>();
                     var mapper = c.Resolve<BsonMapper>();
-                    var path = conf.GetValue("db", "animesea.db");
 
-                    if (!Path.IsPathRooted(path))
-                    {
-                        path = Path.Combine(c.Resolve<IHostingEnvironment>().ContentRootPath, path);
-                    }
-
-                    return new LiteDatabase(path, mapper);
+                    return new LiteDatabase(configuration.GetDatabasePath(env), mapper);
                 })
                 .SingleInstance();
         }

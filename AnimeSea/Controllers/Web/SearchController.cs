@@ -55,7 +55,6 @@ namespace AnimeSea.Controllers.Web
             var libraryResults = _database.GetCollection<Serie>()
                 .Find(x => x.ProviderId == providerId && searchResultIds.Contains(x.ProviderSerieId));
 
-
             return Ok(new
             {
                 searchResults.Next,
