@@ -1,6 +1,8 @@
 ﻿using AnimeSea.Data.Extensions;
 using AnimeSea.Extensions;
 using AnimeSea.Metadata;
+using AnimeSea.Services;
+using AnimeSea.Services.BackgroundTasks;
 using Autofac;
 using LiteDB;
 using Microsoft.AspNetCore.Builder;
@@ -15,6 +17,9 @@ namespace AnimeSea
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+            
+            services.AddHostedService<QueuedHostedService>();
+            services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
