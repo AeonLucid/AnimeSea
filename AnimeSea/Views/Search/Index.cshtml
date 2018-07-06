@@ -5,7 +5,7 @@
 
 @section head 
 {
-    <link href="~/assets/dev/css/page_search.css" rel="stylesheet"/>
+    <link href="~/assets/dev/css/page_search.css" rel="stylesheet" asp-append-version="true"/>
 }
 
 <div id="v_app" v-cloak>
@@ -75,6 +75,6 @@
     <script type="text/javascript">
         var searchUrl = "@Url.Action("SubmitAsync", "Search")";
     </script>
-    <script src="~/assets/dev/js/page_search.popout.js"></script>
-    <script src="~/assets/dev/js/page_search.js"></script>
+    <script src="~/assets/dev/js/page_search.popout.js" asp-append-version="true"></script>
+    <script src="~/assets/dev/js/page_search.js" asp-append-version="true"></script>
 }
