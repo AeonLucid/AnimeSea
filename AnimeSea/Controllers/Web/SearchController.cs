@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AnimeSea.Controllers.Web
 {
-    [Route("Search")]
+    [Route("search")]
     public class SearchController : Controller
     {
         private readonly MetadataManager _metadataManager;
@@ -38,8 +38,8 @@ namespace AnimeSea.Controllers.Web
             });
         }
 
-        [Route("Submit")]
-        public async Task<IActionResult> Submit([FromQuery(Name = "q")] string query, [FromQuery(Name = "pid")] int providerId = 0)
+        [Route("submit")]
+        public async Task<IActionResult> SubmitAsync([FromQuery(Name = "q")] string query, [FromQuery(Name = "pid")] int providerId = 0)
         {
             if (!_metadataManager.MetadataProviders.ContainsKey(providerId))
             {

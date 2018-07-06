@@ -1,5 +1,4 @@
-﻿using AnimeSea.Data;
-using AnimeSea.Data.Extensions;
+﻿using AnimeSea.Data.Extensions;
 using AnimeSea.Extensions;
 using AnimeSea.Metadata;
 using Autofac;

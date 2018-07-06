@@ -31,9 +31,7 @@ namespace AnimeSea
                 {
                     var env = hostingContext.HostingEnvironment;
 
-                    config
-                        .AddDefaults(env, args)
-                        .AddLiteDatabaseConfig(env, args);
+                    config.AddDefaults(env, args);
                 })
                 .ConfigureLogging(logging =>
                 {
