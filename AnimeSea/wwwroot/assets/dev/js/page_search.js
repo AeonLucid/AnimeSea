@@ -1,4 +1,4 @@
-﻿var searchUrl = searchUrl || "/Search/Submit";
+﻿var searchUrl = searchUrl || "/search/submit";
 let searchTimerId = null;
 
 function getParams(query) {
@@ -37,17 +37,17 @@ const app = new Vue({
         this.onHashChange();
     },
     mounted: function() {
-        window.addEventListener('hashchange', this.onHashChange, false);
+        window.addEventListener("hashchange", this.onHashChange, false);
     },
     beforeDestroy: function() {
-        window.removeEventListener('hashchange', this.onHashChange, false);
+        window.removeEventListener("hashchange", this.onHashChange, false);
     },
     watch: {
-        query: function() {
+        query: function () {
             // Update hash
             if (this.query) {
                 const params = {pid: this.providerId !== 0 ? this.providerId: null, q: this.query}
-                const hash = '#' + getQuery(params);
+                const hash = "#" + getQuery(params);
 
                 if (history.pushState) {
                     history.replaceState(null, null, hash);
@@ -56,9 +56,9 @@ const app = new Vue({
                 }
             } else {
                 if (history.pushState) {
-                    history.replaceState(null, null, window.location.pathname)
+                    history.replaceState(null, null, window.location.pathname);
                 } else {
-                    location.replace('#');
+                    location.replace("#");
                 }
             }
 
@@ -138,7 +138,7 @@ const app = new Vue({
          * @argument {String} [query] The query. If no argument is given the "this.query" will be used instead.
          */
         search: function (query, providerId) {
-            if (query === undefined) {
+            if (query === undefined || typeof query !== "string") {
                 query = this.query;
             } else {
                 this.query = query;
