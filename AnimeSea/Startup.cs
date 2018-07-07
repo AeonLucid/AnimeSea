@@ -3,7 +3,6 @@ using AnimeSea.Extensions;
 using AnimeSea.Metadata;
 using AnimeSea.Services;
 using AnimeSea.Services.BackgroundTasks;
-using Autofac;
 using LiteDB;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,28 +19,21 @@ namespace AnimeSea
             
             services.AddHostedService<QueuedHostedService>();
             services.AddSingleton<IBackgroundTaskQueue, BackgroundTaskQueue>();
-        }
 
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
             // Metadata
-            builder.RegisterType<MetadataManager>()
-                .SingleInstance();
+            services.AddSingleton<MetadataManager>();
 
             // Database
-            builder.RegisterType<BsonMapper>()
-                .OnActivating(e => e.Instance.WithAnimeSeaMappings())
-                .SingleInstance();
+            services.AddSingleton(provider => new BsonMapper().WithAnimeSeaMappings());
 
-            builder.Register(c =>
-                {
-                    var configuration = c.Resolve<IConfiguration>();
-                    var env = c.Resolve<IHostingEnvironment>();
-                    var mapper = c.Resolve<BsonMapper>();
+            services.AddSingleton(provider =>
+            {
+                var configuration = provider.GetRequiredService<IConfiguration>();
+                var env = provider.GetRequiredService<IHostingEnvironment>();
+                var mapper = provider.GetRequiredService<BsonMapper>();
 
-                    return new LiteDatabase(configuration.GetDatabasePath(env), mapper);
-                })
-                .SingleInstance();
+                return new LiteDatabase(configuration.GetDatabasePath(env), mapper);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

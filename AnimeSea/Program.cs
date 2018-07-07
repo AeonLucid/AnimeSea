@@ -2,7 +2,6 @@
 using System.IO;
 using AnimeSea.Config;
 using AnimeSea.Extensions;
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.HostFiltering;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -41,8 +40,6 @@ namespace AnimeSea
                 .UseNLog()
                 .ConfigureServices((hostingContext, services) =>
                 {
-                    services.AddAutofac();
-
                     // Fallback
                     services.PostConfigure<HostFilteringOptions>(options =>
                     {
